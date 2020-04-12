@@ -217,10 +217,15 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
 
         /* Modes for SNodes, ORed together in node fields */
         /** Node represents an unfulfilled consumer */
+        // 消费者
         static final int REQUEST    = 0;
+
         /** Node represents an unfulfilled producer */
+        // 生产者
         static final int DATA       = 1;
+
         /** Node is fulfilling another unfulfilled DATA or REQUEST */
+        // 匹配操作状态
         static final int FULFILLING = 2;
 
         /** Returns true if m has fulfilling bit set. */
@@ -228,10 +233,25 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
 
         /** Node class for TransferStacks. */
         static final class SNode {
+
             volatile SNode next;        // next node in stack
+
             volatile SNode match;       // the node matched to this
+
+            /**
+             * 阻塞等待的线程
+             */
             volatile Thread waiter;     // to control park/unpark
-            Object item;                // data; or null for REQUESTs
+
+            /**
+             * data; or null for REQUESTs
+             * 数据，对应消费者来说，该字段为空
+             */
+            Object item;
+
+            /**
+             * 模式，可以是 消费者、生产者、匹配模式
+             */
             int mode;
             // Note: item and mode fields don't need to be volatile
             // since they are always written before, and read after,
@@ -413,8 +433,11 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
              */
             final long deadline = timed ? System.nanoTime() + nanos : 0L;
             Thread w = Thread.currentThread();
+
+            // 自旋次数， 当前线程会自旋一定次数以后才会挂起
             int spins = (shouldSpin(s) ?
                          (timed ? maxTimedSpins : maxUntimedSpins) : 0);
+
             for (;;) {
                 if (w.isInterrupted())
                     s.tryCancel();

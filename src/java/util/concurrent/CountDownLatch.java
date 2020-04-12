@@ -184,7 +184,7 @@ public class CountDownLatch {
                     // 说明被等待任务已经全部结束，doReleaseShared已经被执行，当前线程没必要充当唤醒线程
                     return false;
 
-                // 执行完当前这个任务，刚好是0，那么欢喜
+                // 执行完当前这个任务，刚好是0，那么唤醒
                 int nextc = c-1;
                 if (compareAndSetState(c, nextc))
                     return nextc == 0;

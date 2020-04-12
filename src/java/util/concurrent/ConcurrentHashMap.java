@@ -1030,6 +1030,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
 
         // key与value都不能为null
         if (key == null || value == null) throw new NullPointerException();
+
         // 计算出hash
         int hash = spread(key.hashCode());
 
@@ -1043,7 +1044,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                 // 初始化table
                 tab = initTable();
 
-            // 通过hash得到数组下标，并且或者桶的链表头
+            // 通过hash得到数组下标，并且获得桶的链表头
             else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
                 // 如果桶中没有元素，使用CAS插入插入即可保证线程安全
                 if (casTabAt(tab, i, null,
@@ -1055,7 +1056,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                 tab = helpTransfer(tab, f);
 
             else {
-                // 下面分普通链表与树进行插入操作
+                // 下面分别是普通链表与树进行插入操作
                 V oldVal = null;
 
                 // 通过链表通作为锁，控制其他线程对当前桶的访问

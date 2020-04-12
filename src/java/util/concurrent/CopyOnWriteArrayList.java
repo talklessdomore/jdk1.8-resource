@@ -438,6 +438,11 @@ public class CopyOnWriteArrayList<E>
      * @return {@code true} (as specified by {@link Collection#add})
      */
     public boolean add(E e) {
+
+        /*
+         * 这里上锁，说明写请求是串行的
+         * 读写是并行的。
+         */
         final ReentrantLock lock = this.lock;
         lock.lock();
 
