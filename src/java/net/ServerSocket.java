@@ -344,8 +344,12 @@ class ServerSocket implements java.io.Closeable {
      * should be greater than {@code 0}. If it is less than or equal to
      * {@code 0}, then an implementation specific default will be used.
      * @param   endpoint        The IP address and port number to bind to.
-     * @param   backlog         requested maximum length of the queue of
-     *                          incoming connections.
+     * @param   backlog
+     *      ServerSocket有一个队列，存放还没有来得及处理的客户端Socket，这个队列的容量就是backlog的含义。
+     *      如果队列已经被客户端socket占满了，如果还有新的连接过来，那么ServerSocket会拒绝新的连接。
+     *      也就是说backlog提供了容量限制功能，避免太多的客户端socket占用太多服务器资源。
+     *
+     *
      * @throws  IOException if the bind operation fails, or if the socket
      *                     is already bound.
      * @throws  SecurityException       if a {@code SecurityManager} is present and

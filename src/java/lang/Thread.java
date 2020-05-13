@@ -358,6 +358,7 @@ class Thread implements Runnable {
         if (security == null || isCCLOverridden(parent.getClass()))
             this.contextClassLoader = parent.getContextClassLoader();
         else
+            // 上下文类加载器是初始化线程的时候，从父类加载器中继承的，默认的上下文类加载器是应用类加载器
             this.contextClassLoader = parent.contextClassLoader;
         this.inheritedAccessControlContext =
                 acc != null ? acc : AccessController.getContext();

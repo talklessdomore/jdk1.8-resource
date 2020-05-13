@@ -216,6 +216,7 @@ public final class ServiceLoader<S>
      */
     public void reload() {
         providers.clear();
+        // 使用迭代器来加载实现类
         lookupIterator = new LazyIterator(service, loader);
     }
 
@@ -367,6 +368,7 @@ public final class ServiceLoader<S>
             nextName = null;
             Class<?> c = null;
             try {
+                // 加载这个类
                 c = Class.forName(cn, false, loader);
             } catch (ClassNotFoundException x) {
                 fail(service,
@@ -377,7 +379,9 @@ public final class ServiceLoader<S>
                      "Provider " + cn  + " not a subtype");
             }
             try {
+                // 生成类实例
                 S p = service.cast(c.newInstance());
+                // 放到map中
                 providers.put(cn, p);
                 return p;
             } catch (Throwable x) {
@@ -507,6 +511,7 @@ public final class ServiceLoader<S>
     public static <S> ServiceLoader<S> load(Class<S> service,
                                             ClassLoader loader)
     {
+        // 生成ServiceLoader即完成加载
         return new ServiceLoader<>(service, loader);
     }
 
@@ -514,6 +519,7 @@ public final class ServiceLoader<S>
      * Creates a new service loader for the given service type, using the
      * current thread's {@linkplain java.lang.Thread#getContextClassLoader
      * context class loader}.
+     * 创建一个新的服务加载器，使用当前线程来加载
      *
      * <p> An invocation of this convenience method of the form
      *
@@ -534,7 +540,9 @@ public final class ServiceLoader<S>
      * @return A new service loader
      */
     public static <S> ServiceLoader<S> load(Class<S> service) {
+        // 使用当前线程的上下文类加载器
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        // 使用类加载器去加载这个服务
         return ServiceLoader.load(service, cl);
     }
 
