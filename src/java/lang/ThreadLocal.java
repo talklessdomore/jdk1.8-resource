@@ -387,15 +387,23 @@ public class ThreadLocal<T> {
             for (int j = 0; j < len; j++) {
                 Entry e = parentTable[j];
                 if (e != null) {
+
+                    // 获取key
                     @SuppressWarnings("unchecked")
                     ThreadLocal<Object> key = (ThreadLocal<Object>) e.get();
                     if (key != null) {
+                        // 获取value
                         Object value = key.childValue(e.value);
                         Entry c = new Entry(key, value);
+
+                        // 计算存放key的位置
                         int h = key.threadLocalHashCode & (len - 1);
+
+                        // 线性探测法
                         while (table[h] != null)
                             h = nextIndex(h, len);
                         table[h] = c;
+
                         size++;
                     }
                 }

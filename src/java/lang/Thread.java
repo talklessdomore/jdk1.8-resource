@@ -367,6 +367,7 @@ class Thread implements Runnable {
         this.target = target;
         setPriority(priority);
         if (parent.inheritableThreadLocals != null)
+            // 把父线程的本地变量赋值给inheritableThreadLocals
             this.inheritableThreadLocals =
                 ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);
         /* Stash the specified stack size in case the VM cares */
