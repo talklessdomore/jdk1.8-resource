@@ -1025,6 +1025,14 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * 把映射放入map中
      * @param onlyIfAbsent true：相当于putIfAbsent，即key存在就不更换value;
      *                     false表示key存在也更换value
+     * 1.校验map中的key和value不能为空；
+     * 2.计算key的hash值，并且hash值和hash的高16位进行异或运算之后与数组长度（n-1）与运算获取node数组下标；
+     * 3.该数组位置为空，直接采用cas方式设置值；
+     * 4.该数组位置不为空，将该桶上锁，判断该节点类型，如果是forwardingNode节点该链表是在扩容阶段，帮助迁移；
+     * 5.否则：进行数据的put操作
+     *          链表put操作；
+     *          红黑树put操作；
+     * 6.最后根据链表节点个数判断是否需要转化红黑树；
      */
     final V putVal(K key, V value, boolean onlyIfAbsent) {
 
